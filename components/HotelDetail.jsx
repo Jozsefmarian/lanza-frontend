@@ -1,19 +1,23 @@
-// src/components/SearchResult.jsx
-import React from 'react'
-import HotelCard from './HotelCard'
-
-const SearchResult = ({ hotels }) => {
-  if (!hotels?.length) {
-    return <p className="text-center text-gray-500">Nincs találat.</p>
-  }
-
+export default function HotelDetail({ hotel }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-      {hotels.map((hotel) => (
-        <HotelCard key={hotel.id} hotel={hotel} />
-      ))}
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">{hotel.name}</h1>
+      {hotel.main_photo_url && (
+        <img
+          src={hotel.main_photo_url}
+          alt={hotel.name}
+          className="w-full h-auto rounded mb-4"
+        />
+      )}
+      <p className="text-gray-700 mb-2">
+        <strong>Address:</strong> {hotel.address}
+      </p>
+      <p className="text-gray-700 mb-2">
+        <strong>Stars:</strong> {hotel.stars}
+      </p>
+      <p className="text-gray-700 mb-2">
+        <strong>Coordinates:</strong> {hotel.latitude}, {hotel.longitude}
+      </p>
     </div>
-  )
+  );
 }
-
-export default SearchResult
