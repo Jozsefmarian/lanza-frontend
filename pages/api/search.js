@@ -32,18 +32,22 @@ export default async function handler(req, res) {
     }
 
     // 2. Hotels from that search_id
-    const hotelsRes = await fetch('https://api.worldota.net/api/b2b/v3/search/serp/hotels/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + Buffer.from(process.env.RATEHAWK_USER_ID + ':' + process.env.RATEHAWK_API_KEY).toString('base64')
-      },
-      body: JSON.stringify({
-        search_id: serpRegionData.search_id,
-        offset: 0,
-        limit: 20
-      }),
-    })
+    // ... a többi rész változatlan
+// csak ezt módosítsd a hotels lekérdezésnél:
+
+const hotelsRes = await fetch('https://api.worldota.net/api/b2b/v3/search/serp/hotels/', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Basic ' + Buffer.from(process.env.RATEHAWK_USER_ID + ':' + process.env.RATEHAWK_API_KEY).toString('base64')
+  },
+  body: JSON.stringify({
+    search_id: serpRegionData.search_id,
+    language: 'en',
+    offset: 0,
+    limit: 20
+  }),
+})
 
     const hotelsData = await hotelsRes.json()
 
