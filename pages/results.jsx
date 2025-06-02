@@ -24,8 +24,8 @@ export default function Results() {
 
         const data = await res.json()
 
-        if (res.ok && data.hotels) {
-          setHotels(data.hotels)
+        if (res.ok && data.items) {
+          setHotels(data.items)
         } else {
           throw new Error(data.error || 'Hiba a hotel adatok betöltésekor.')
         }
