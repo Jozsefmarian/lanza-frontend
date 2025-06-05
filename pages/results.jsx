@@ -12,28 +12,30 @@ export default function Results() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const res = await fetch(`/api/search?region_id=${region_id}&check_in=${check_in}&check_out=${check_out}&adults=${adults}`)
-        const data = await res.json()
-        console.log("API response:", data)
-        if (res.ok && data.items) {
-          setHotels(data.items)
-        } else {
-          setError('No results')
-        }
-      } catch (err) {
-        console.error(err)
-        setError('Failed to fetch')
-      } finally {
-        setLoading(false)
-      }
-    }
+  if (!router.isReady) return // router.query még nem áll készen
 
-    if (region_id && check_in && check_out && adults) {
-      fetchResults()
+  const fetchResults = async () => {
+    try {
+      const res = await fetch(`/api/search?region_id=${region_id}&check_in=${check_in}&check_out=${check_out}&adults=${adults}`)
+      const data = await res.json()
+      console.log("API response:", data)
+      if (res.ok && data.items) {
+        setHotels(data.items)
+      } else {
+        setError('No results')
+      }
+    } catch (err) {
+      console.error(err)
+      setError('Failed to fetch')
+    } finally {
+      setLoading(false)
     }
-  }, [region_id, check_in, check_out, adults])
+  }
+
+  if (region_id && check_in && check_out && adults) {
+    fetchResults()
+  }
+}, [router.isReady, region_id, check_in, check_out, adults])
 
   return (
     <main className="max-w-5xl mx-auto p-6">
