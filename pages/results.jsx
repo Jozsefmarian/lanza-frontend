@@ -12,28 +12,28 @@ export default function Results() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-  const fetchResults = async () => {
-    try {
-      const res = await fetch(`/api/search?region_id=${regionId}&check_in=${checkIn}&check_out=${checkOut}&adults=${adults}`);
-      const data = await res.json();
-      console.log("API response:", data); // <<< EZ KELL MOST
-      if (res.ok && data.items) {
-        setHotels(data.items);
-      } else {
-        setError('No results');
+    const fetchResults = async () => {
+      try {
+        const res = await fetch(`/api/search?region_id=${region_id}&check_in=${check_in}&check_out=${check_out}&adults=${adults}`)
+        const data = await res.json()
+        console.log("API response:", data)
+        if (res.ok && data.items) {
+          setHotels(data.items)
+        } else {
+          setError('No results')
+        }
+      } catch (err) {
+        console.error(err)
+        setError('Failed to fetch')
+      } finally {
+        setLoading(false)
       }
-    } catch (err) {
-      console.error(err);
-      setError('Failed to fetch');
-    } finally {
-      setLoading(false);
     }
-  };
 
-  if (regionId && checkIn && checkOut && adults) {
-    fetchResults();
-  }
-}, [regionId, checkIn, checkOut, adults]);
+    if (region_id && check_in && check_out && adults) {
+      fetchResults()
+    }
+  }, [region_id, check_in, check_out, adults])
 
   return (
     <main className="max-w-5xl mx-auto p-6">
@@ -47,7 +47,11 @@ export default function Results() {
           <div key={hotel.hid} className="border rounded-xl p-4 shadow">
             <h2 className="text-lg font-semibold">{hotel.name}</h2>
             <p>ID: {hotel.hid}</p>
-            {hotel.min_price && <p className="text-green-700 font-bold">Ár: {hotel.min_price.amount} {hotel.min_price.currency}</p>}
+            {hotel.min_price && (
+              <p className="text-green-700 font-bold">
+                Ár: {hotel.min_price.amount} {hotel.min_price.currency}
+              </p>
+            )}
           </div>
         ))}
       </div>
