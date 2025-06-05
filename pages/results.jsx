@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 export default function ResultsPage() {
   const router = useRouter();
-  const { region_id, check_in, check_out, adults } = router.query;
+  const { regionId, checkIn, checkOut, adults } = router.query;
 
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,33 +13,31 @@ export default function ResultsPage() {
   useEffect(() => {
     if (!router.isReady) return;
 
-    const s = region_id || 715;
-    const t = check_in;
-    const n = check_out;
-    const r = adults || 2;
+    const fetchResults = async () => {
+      try {
+        const res = await fetch(
+          `/api/search?region_id=${regionId || 715}&check_in=${checkIn}&check_out=${checkOut}&adults=${adults || 2}`
+        );
+        const data = await res.json();
+        console.log("API response:", data);
 
-    if (s && t && n && r) {
-      const fetchData = async () => {
-        try {
-          const res = await fetch(`/api/search?region_id=${s}&check_in=${t}&check_out=${n}&adults=${r}`);
-          const data = await res.json();
-          console.log("API response:", data);
-          if (res.ok && data.items) {
-            setHotels(data.items);
-          } else {
-            setError("Nincs találat");
-          }
-        } catch (err) {
-          console.error("Hiba a fetch közben:", err);
-          setError("Nem sikerült lekérdezni");
-        } finally {
-          setLoading(false);
+        if (res.ok && data.items) {
+          setHotels(data.items);
+        } else {
+          setError("Nincs találat");
         }
-      };
+      } catch (err) {
+        console.error(err);
+        setError("Nem sikerült betölteni az adatokat");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      fetchData();
+    if (regionId && checkIn && checkOut && adults) {
+      fetchResults();
     }
-  }, [router.isReady, region_id, check_in, check_out, adults]);
+  }, [router.isReady, regionId, checkIn, checkOut, adults]);
 
   return (
     <main className="max-w-5xl mx-auto p-6">
