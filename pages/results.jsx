@@ -15,9 +15,18 @@ export default function ResultsPage() {
 
     const fetchResults = async () => {
       try {
-        const res = await fetch(
-          `/api/search?region_id=${regionId || 715}&check_in=${checkIn}&check_out=${checkOut}&adults=${adults || 2}`
-        );
+        const res = await fetch("/api/search", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    region_id: regionId || 715,
+    check_in: checkIn,
+    check_out: checkOut,
+    adults: adults || 2,
+  }),
+});
         const data = await res.json();
         console.log("API response:", data);
 
