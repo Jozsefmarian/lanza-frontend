@@ -12,32 +12,28 @@ export default function Results() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!check_in || !check_out) return
-
-    const fetchHotels = async () => {
-      try {
-        const res = await fetch('/api/search', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ region_id: Number(region_id), check_in, check_out, adults: Number(adults) }),
-        })
-
-        const data = await res.json()
-
-        if (res.ok && data.items) {
-          setHotels(data.items)
-        } else {
-          throw new Error(data.error || 'Hiba a hotel adatok betöltésekor.')
-        }
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
+  const fetchResults = async () => {
+    try {
+      const res = await fetch(`/api/search?region_id=${regionId}&check_in=${checkIn}&check_out=${checkOut}&adults=${adults}`);
+      const data = await res.json();
+      console.log("API response:", data); // <<< EZ KELL MOST
+      if (res.ok && data.items) {
+        setHotels(data.items);
+      } else {
+        setError('No results');
       }
+    } catch (err) {
+      console.error(err);
+      setError('Failed to fetch');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    fetchHotels()
-  }, [region_id, check_in, check_out, adults])
+  if (regionId && checkIn && checkOut && adults) {
+    fetchResults();
+  }
+}, [regionId, checkIn, checkOut, adults]);
 
   return (
     <main className="max-w-5xl mx-auto p-6">
